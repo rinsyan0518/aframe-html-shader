@@ -4,8 +4,7 @@
  * @see https://github.com/scenevr/htmltexture-component
  */
 
-
-import html2canvas from './lib/html2canvas/core'
+import html2canvas from 'html2canvas'
 
 if (typeof AFRAME === 'undefined') {
   throw 'Component attempted to register before AFRAME was available.'
@@ -382,11 +381,10 @@ AFRAME.registerShader('html', {
     if (!this.__targetEl) { return }
     const { width, height } = this.__targetEl.getBoundingClientRect()
     html2canvas(this.__targetEl, {
-      background: undefined,
+      backgroundColor: null,
       width: this.__width || width,
-      height: this.__height || height,
-      onrendered: this.__draw.bind(this)
-    })
+      height: this.__height || height
+    }).then(this.__draw.bind(this))
   },
 
   /**
