@@ -382,6 +382,7 @@ AFRAME.registerShader('html', {
     const { width, height } = this.__targetEl.getBoundingClientRect()
     html2canvas(this.__targetEl, {
       backgroundColor: null,
+      useCORS: true,
       width: this.__width || width,
       height: this.__height || height
     }).then(this.__draw.bind(this))
