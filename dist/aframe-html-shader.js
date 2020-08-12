@@ -464,6 +464,7 @@
 
 	    (0, _html2canvas2.default)(this.__targetEl, {
 	      backgroundColor: null,
+	      useCORS: true,
 	      width: this.__width || width,
 	      height: this.__height || height
 	    }).then(this.__draw.bind(this));
