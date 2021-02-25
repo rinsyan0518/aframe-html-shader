@@ -388,7 +388,14 @@ AFRAME.registerShader('html', {
       width: this.__width || width,
       height: this.__height || height
     }
-    domtoimage.toSvg(this.__targetEl, options)
+    domtoimage
+      // Workaround for iOS Safari
+      // First rendering don't render <img>. But second rendering is fine...
+      // But the following code is not fine.
+      // // .toSvg(this.__targetEl, options)
+      // // .then(_ => domtoimage.toSvg(this.__targetEl, options))
+      .toPng(this.__targetEl, options)
+      .then(_ => domtoimage.toPng(this.__targetEl, options))
       .then((uri) => {
         return new Promise((resolve, reject) => {
           const img = new Image()
