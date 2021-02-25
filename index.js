@@ -365,6 +365,10 @@ AFRAME.registerShader('html', {
     if (this.__debugEl) {
       this.__debugEl.innerHTML = ''
       this.__debugEl.appendChild(canvas)
+    } else {
+      canvas.height = 0
+      canvas.width = 0
+      canvas.remove()
     }
 
     /* setup next tick */
@@ -407,7 +411,8 @@ AFRAME.registerShader('html', {
         const canvas = document.createElement('canvas')
         canvas.width = options.width
         canvas.height = options.height
-        canvas.getContext('2d').drawImage(image, 0, 0);
+        const ctx = canvas.getContext('2d', { storage: 'discardable' })
+        ctx.drawImage(image, 0, 0);
         return canvas;
       })
       .then(this.__draw.bind(this))
