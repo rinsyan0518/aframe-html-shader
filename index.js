@@ -4,7 +4,7 @@
  * @see https://github.com/scenevr/htmltexture-component
  */
 
-import html2canvas from 'html2canvas'
+import domtoimage from 'dom-to-image'
 
 if (typeof AFRAME === 'undefined') {
   throw 'Component attempted to register before AFRAME was available.'
@@ -380,12 +380,37 @@ AFRAME.registerShader('html', {
     this.__nextTime = null
     if (!this.__targetEl) { return }
     const { width, height } = this.__targetEl.getBoundingClientRect()
-    html2canvas(this.__targetEl, {
-      backgroundColor: null,
-      useCORS: true,
+    const options = {
       width: this.__width || width,
       height: this.__height || height
-    }).then(this.__draw.bind(this))
+    }
+    domtoimage.toSvg(this.__targetEl, options)
+      .then((uri) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image()
+          const res = () => {
+            img.removeEventListener('load', res)
+            img.removeEventListener('error', rej)
+            resolve(img)
+          }
+          const rej = (event) => {
+            img.removeEventListener('load', res)
+            img.removeEventListener('error', rej)
+            reject(event)
+          }
+          img.addEventListener('load', res)
+          img.addEventListener('error', rej)
+          img.src = uri
+        })
+      })
+      .then((image) => {
+        const canvas = document.createElement('canvas')
+        canvas.width = options.width
+        canvas.height = options.height
+        canvas.getContext('2d').drawImage(image, 0, 0);
+        return canvas;
+      })
+      .then(this.__draw.bind(this))
   },
 
   /**

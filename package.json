@@ -46,6 +46,6 @@
     "webpack": "^1.12.15"
   },
   "dependencies": {
-    "html2canvas": "^1.0.0-rc.5"
+    "dom-to-image": "^2.6.0"
   }
 }
