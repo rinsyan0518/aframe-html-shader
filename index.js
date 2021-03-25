@@ -474,7 +474,22 @@ AFRAME.registerShader('html', {
     this.__debugEl = null
   },
 
-
+  /**
+   * manually dispose
+   */
+  dispose () {
+    log('dispose')
+    this.el.sceneEl.removeBehavior(this)
+    if (this.__cnv) {
+      this.__cnv.width = 0
+      this.__cnv.height = 0
+      this.__cnv = null
+    }
+    if (this.__texture) {
+      this.__texture.dispose()
+      this.__texture = null
+    }
+  }
 
 })
 
