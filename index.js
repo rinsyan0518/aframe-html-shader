@@ -390,11 +390,13 @@ AFRAME.registerShader('html', {
     }
     domtoimage
       // Workaround for iOS Safari
-      // First rendering don't render <img>. But second rendering is fine...
-      // But the following code is not fine.
-      // // .toSvg(this.__targetEl, options)
-      // // .then(_ => domtoimage.toSvg(this.__targetEl, options))
+      // When execute toPng once, don't render <img>.
+      // When execute toPng twice, don't render <img> after executed it a few times.
+      // When execute toPng third, it works on my iPhone.
+      // In the case of to replace toPng with toSvg, but it doesn't work.
+      // Why...
       .toPng(this.__targetEl, options)
+      .then(_ => domtoimage.toPng(this.__targetEl, options))
       .then(_ => domtoimage.toPng(this.__targetEl, options))
       .then((uri) => {
         return new Promise((resolve, reject) => {
