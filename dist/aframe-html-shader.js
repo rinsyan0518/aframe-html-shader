@@ -474,11 +474,14 @@
 	    };
 	    _domToImage2.default
 	    // Workaround for iOS Safari
-	    // First rendering don't render <img>. But second rendering is fine...
-	    // But the following code is not fine.
-	    // // .toSvg(this.__targetEl, options)
-	    // // .then(_ => domtoimage.toSvg(this.__targetEl, options))
+	    // When execute toPng once, don't render <img>.
+	    // When execute toPng twice, don't render <img> after executed it a few times.
+	    // When execute toPng third, it works on my iPhone.
+	    // In the case of to replace toPng with toSvg, but it doesn't work.
+	    // Why...
 	    .toPng(this.__targetEl, options).then(function (_) {
+	      return _domToImage2.default.toPng(_this2.__targetEl, options);
+	    }).then(function (_) {
 	      return _domToImage2.default.toPng(_this2.__targetEl, options);
 	    }).then(function (uri) {
 	      return new Promise(function (resolve, reject) {
@@ -555,6 +558,24 @@
 	    this.__target = null;
 	    this.__targetEl = null;
 	    this.__debugEl = null;
+	  },
+
+
+	  /**
+	   * manually dispose
+	   */
+	  dispose: function dispose() {
+	    log('dispose');
+	    this.el.sceneEl.removeBehavior(this);
+	    if (this.__cnv) {
+	      this.__cnv.width = 0;
+	      this.__cnv.height = 0;
+	      this.__cnv = null;
+	    }
+	    if (this.__texture) {
+	      this.__texture.dispose();
+	      this.__texture = null;
+	    }
 	  }
 	});
 
